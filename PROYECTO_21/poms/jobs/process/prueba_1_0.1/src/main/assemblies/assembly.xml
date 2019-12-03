@@ -241,6 +241,7 @@
                 <include>org.talend.libraries:talend_file_enhanced_20070724:jar:6.0.0</include>
                 <include>org.example.proyecto_21.code:routines:jar:7.2.1</include>
                 <include>org.talend.libraries:job-audit:jar:1.0</include>
+                <include>org.talend.libraries:talendcsv:jar:6.0.0</include>
             </includes>
             <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
             <useProjectArtifact>false</useProjectArtifact>

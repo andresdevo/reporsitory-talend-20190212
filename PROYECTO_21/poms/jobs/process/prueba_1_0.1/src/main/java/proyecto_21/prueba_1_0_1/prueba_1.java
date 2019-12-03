@@ -270,6 +270,36 @@ public class prueba_1 implements TalendJob {
 		tFixedFlowInput_1_onSubJobError(exception, errorComponent, globalMap);
 	}
 
+	public void tFileInputDelimited_1_error(Exception exception, String errorComponent,
+			final java.util.Map<String, Object> globalMap) throws TalendException {
+
+		end_Hash.put(errorComponent, System.currentTimeMillis());
+
+		status = "failure";
+
+		tFileInputDelimited_1_onSubJobError(exception, errorComponent, globalMap);
+	}
+
+	public void tMap_1_error(Exception exception, String errorComponent, final java.util.Map<String, Object> globalMap)
+			throws TalendException {
+
+		end_Hash.put(errorComponent, System.currentTimeMillis());
+
+		status = "failure";
+
+		tFileInputDelimited_1_onSubJobError(exception, errorComponent, globalMap);
+	}
+
+	public void tLogRow_2_error(Exception exception, String errorComponent,
+			final java.util.Map<String, Object> globalMap) throws TalendException {
+
+		end_Hash.put(errorComponent, System.currentTimeMillis());
+
+		status = "failure";
+
+		tFileInputDelimited_1_onSubJobError(exception, errorComponent, globalMap);
+	}
+
 	public void talendJobLog_error(Exception exception, String errorComponent,
 			final java.util.Map<String, Object> globalMap) throws TalendException {
 
@@ -281,6 +311,14 @@ public class prueba_1 implements TalendJob {
 	}
 
 	public void tFixedFlowInput_1_onSubJobError(Exception exception, String errorComponent,
+			final java.util.Map<String, Object> globalMap) throws TalendException {
+
+		resumeUtil.addLog("SYSTEM_LOG", "NODE:" + errorComponent, "", Thread.currentThread().getId() + "", "FATAL", "",
+				exception.getMessage(), ResumeUtil.getExceptionStackTrace(exception), "");
+
+	}
+
+	public void tFileInputDelimited_1_onSubJobError(Exception exception, String errorComponent,
 			final java.util.Map<String, Object> globalMap) throws TalendException {
 
 		resumeUtil.addLog("SYSTEM_LOG", "NODE:" + errorComponent, "", Thread.currentThread().getId() + "", "FATAL", "",
@@ -717,6 +755,17 @@ public class prueba_1 implements TalendJob {
 
 			} // end the resume
 
+			if (resumeEntryMethodName == null || globalResumeTicket) {
+				resumeUtil.addLog("CHECKPOINT", "CONNECTION:SUBJOB_OK:tFixedFlowInput_1:OnSubjobOk", "",
+						Thread.currentThread().getId() + "", "", "", "", "", "");
+			}
+
+			if (execStat) {
+				runStat.updateStatOnConnection("OnSubjobOk1", 0, "ok");
+			}
+
+			tFileInputDelimited_1Process(globalMap);
+
 		} catch (java.lang.Exception e) {
 
 			if (!(e instanceof TalendException)) {
@@ -764,6 +813,1069 @@ public class prueba_1 implements TalendJob {
 		}
 
 		globalMap.put("tFixedFlowInput_1_SUBPROCESS_STATE", 1);
+	}
+
+	public static class out1Struct implements routines.system.IPersistableRow<out1Struct> {
+		final static byte[] commonByteArrayLock_PROYECTO_21_prueba_1 = new byte[0];
+		static byte[] commonByteArray_PROYECTO_21_prueba_1 = new byte[0];
+
+		public Integer GenreId;
+
+		public Integer getGenreId() {
+			return this.GenreId;
+		}
+
+		public String Name;
+
+		public String getName() {
+			return this.Name;
+		}
+
+		private Integer readInteger(ObjectInputStream dis) throws IOException {
+			Integer intReturn;
+			int length = 0;
+			length = dis.readByte();
+			if (length == -1) {
+				intReturn = null;
+			} else {
+				intReturn = dis.readInt();
+			}
+			return intReturn;
+		}
+
+		private void writeInteger(Integer intNum, ObjectOutputStream dos) throws IOException {
+			if (intNum == null) {
+				dos.writeByte(-1);
+			} else {
+				dos.writeByte(0);
+				dos.writeInt(intNum);
+			}
+		}
+
+		private String readString(ObjectInputStream dis) throws IOException {
+			String strReturn = null;
+			int length = 0;
+			length = dis.readInt();
+			if (length == -1) {
+				strReturn = null;
+			} else {
+				if (length > commonByteArray_PROYECTO_21_prueba_1.length) {
+					if (length < 1024 && commonByteArray_PROYECTO_21_prueba_1.length == 0) {
+						commonByteArray_PROYECTO_21_prueba_1 = new byte[1024];
+					} else {
+						commonByteArray_PROYECTO_21_prueba_1 = new byte[2 * length];
+					}
+				}
+				dis.readFully(commonByteArray_PROYECTO_21_prueba_1, 0, length);
+				strReturn = new String(commonByteArray_PROYECTO_21_prueba_1, 0, length, utf8Charset);
+			}
+			return strReturn;
+		}
+
+		private void writeString(String str, ObjectOutputStream dos) throws IOException {
+			if (str == null) {
+				dos.writeInt(-1);
+			} else {
+				byte[] byteArray = str.getBytes(utf8Charset);
+				dos.writeInt(byteArray.length);
+				dos.write(byteArray);
+			}
+		}
+
+		public void readData(ObjectInputStream dis) {
+
+			synchronized (commonByteArrayLock_PROYECTO_21_prueba_1) {
+
+				try {
+
+					int length = 0;
+
+					this.GenreId = readInteger(dis);
+
+					this.Name = readString(dis);
+
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+
+				}
+
+			}
+
+		}
+
+		public void writeData(ObjectOutputStream dos) {
+			try {
+
+				// Integer
+
+				writeInteger(this.GenreId, dos);
+
+				// String
+
+				writeString(this.Name, dos);
+
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+
+		}
+
+		public String toString() {
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(super.toString());
+			sb.append("[");
+			sb.append("GenreId=" + String.valueOf(GenreId));
+			sb.append(",Name=" + Name);
+			sb.append("]");
+
+			return sb.toString();
+		}
+
+		public String toLogString() {
+			StringBuilder sb = new StringBuilder();
+
+			if (GenreId == null) {
+				sb.append("<null>");
+			} else {
+				sb.append(GenreId);
+			}
+
+			sb.append("|");
+
+			if (Name == null) {
+				sb.append("<null>");
+			} else {
+				sb.append(Name);
+			}
+
+			sb.append("|");
+
+			return sb.toString();
+		}
+
+		/**
+		 * Compare keys
+		 */
+		public int compareTo(out1Struct other) {
+
+			int returnValue = -1;
+
+			return returnValue;
+		}
+
+		private int checkNullsAndCompare(Object object1, Object object2) {
+			int returnValue = 0;
+			if (object1 instanceof Comparable && object2 instanceof Comparable) {
+				returnValue = ((Comparable) object1).compareTo(object2);
+			} else if (object1 != null && object2 != null) {
+				returnValue = compareStrings(object1.toString(), object2.toString());
+			} else if (object1 == null && object2 != null) {
+				returnValue = 1;
+			} else if (object1 != null && object2 == null) {
+				returnValue = -1;
+			} else {
+				returnValue = 0;
+			}
+
+			return returnValue;
+		}
+
+		private int compareStrings(String string1, String string2) {
+			return string1.compareTo(string2);
+		}
+
+	}
+
+	public static class row2Struct implements routines.system.IPersistableRow<row2Struct> {
+		final static byte[] commonByteArrayLock_PROYECTO_21_prueba_1 = new byte[0];
+		static byte[] commonByteArray_PROYECTO_21_prueba_1 = new byte[0];
+
+		public Integer GenreId;
+
+		public Integer getGenreId() {
+			return this.GenreId;
+		}
+
+		public String Name;
+
+		public String getName() {
+			return this.Name;
+		}
+
+		private Integer readInteger(ObjectInputStream dis) throws IOException {
+			Integer intReturn;
+			int length = 0;
+			length = dis.readByte();
+			if (length == -1) {
+				intReturn = null;
+			} else {
+				intReturn = dis.readInt();
+			}
+			return intReturn;
+		}
+
+		private void writeInteger(Integer intNum, ObjectOutputStream dos) throws IOException {
+			if (intNum == null) {
+				dos.writeByte(-1);
+			} else {
+				dos.writeByte(0);
+				dos.writeInt(intNum);
+			}
+		}
+
+		private String readString(ObjectInputStream dis) throws IOException {
+			String strReturn = null;
+			int length = 0;
+			length = dis.readInt();
+			if (length == -1) {
+				strReturn = null;
+			} else {
+				if (length > commonByteArray_PROYECTO_21_prueba_1.length) {
+					if (length < 1024 && commonByteArray_PROYECTO_21_prueba_1.length == 0) {
+						commonByteArray_PROYECTO_21_prueba_1 = new byte[1024];
+					} else {
+						commonByteArray_PROYECTO_21_prueba_1 = new byte[2 * length];
+					}
+				}
+				dis.readFully(commonByteArray_PROYECTO_21_prueba_1, 0, length);
+				strReturn = new String(commonByteArray_PROYECTO_21_prueba_1, 0, length, utf8Charset);
+			}
+			return strReturn;
+		}
+
+		private void writeString(String str, ObjectOutputStream dos) throws IOException {
+			if (str == null) {
+				dos.writeInt(-1);
+			} else {
+				byte[] byteArray = str.getBytes(utf8Charset);
+				dos.writeInt(byteArray.length);
+				dos.write(byteArray);
+			}
+		}
+
+		public void readData(ObjectInputStream dis) {
+
+			synchronized (commonByteArrayLock_PROYECTO_21_prueba_1) {
+
+				try {
+
+					int length = 0;
+
+					this.GenreId = readInteger(dis);
+
+					this.Name = readString(dis);
+
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+
+				}
+
+			}
+
+		}
+
+		public void writeData(ObjectOutputStream dos) {
+			try {
+
+				// Integer
+
+				writeInteger(this.GenreId, dos);
+
+				// String
+
+				writeString(this.Name, dos);
+
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+
+		}
+
+		public String toString() {
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(super.toString());
+			sb.append("[");
+			sb.append("GenreId=" + String.valueOf(GenreId));
+			sb.append(",Name=" + Name);
+			sb.append("]");
+
+			return sb.toString();
+		}
+
+		public String toLogString() {
+			StringBuilder sb = new StringBuilder();
+
+			if (GenreId == null) {
+				sb.append("<null>");
+			} else {
+				sb.append(GenreId);
+			}
+
+			sb.append("|");
+
+			if (Name == null) {
+				sb.append("<null>");
+			} else {
+				sb.append(Name);
+			}
+
+			sb.append("|");
+
+			return sb.toString();
+		}
+
+		/**
+		 * Compare keys
+		 */
+		public int compareTo(row2Struct other) {
+
+			int returnValue = -1;
+
+			return returnValue;
+		}
+
+		private int checkNullsAndCompare(Object object1, Object object2) {
+			int returnValue = 0;
+			if (object1 instanceof Comparable && object2 instanceof Comparable) {
+				returnValue = ((Comparable) object1).compareTo(object2);
+			} else if (object1 != null && object2 != null) {
+				returnValue = compareStrings(object1.toString(), object2.toString());
+			} else if (object1 == null && object2 != null) {
+				returnValue = 1;
+			} else if (object1 != null && object2 == null) {
+				returnValue = -1;
+			} else {
+				returnValue = 0;
+			}
+
+			return returnValue;
+		}
+
+		private int compareStrings(String string1, String string2) {
+			return string1.compareTo(string2);
+		}
+
+	}
+
+	public void tFileInputDelimited_1Process(final java.util.Map<String, Object> globalMap) throws TalendException {
+		globalMap.put("tFileInputDelimited_1_SUBPROCESS_STATE", 0);
+
+		final boolean execStat = this.execStat;
+
+		String iterateId = "";
+
+		String currentComponent = "";
+		java.util.Map<String, Object> resourceMap = new java.util.HashMap<String, Object>();
+
+		try {
+			// TDI-39566 avoid throwing an useless Exception
+			boolean resumeIt = true;
+			if (globalResumeTicket == false && resumeEntryMethodName != null) {
+				String currentMethodName = new java.lang.Exception().getStackTrace()[0].getMethodName();
+				resumeIt = resumeEntryMethodName.equals(currentMethodName);
+			}
+			if (resumeIt || globalResumeTicket) { // start the resume
+				globalResumeTicket = true;
+
+				row2Struct row2 = new row2Struct();
+				out1Struct out1 = new out1Struct();
+
+				/**
+				 * [tLogRow_2 begin ] start
+				 */
+
+				ok_Hash.put("tLogRow_2", false);
+				start_Hash.put("tLogRow_2", System.currentTimeMillis());
+
+				currentComponent = "tLogRow_2";
+
+				if (execStat || enableLogStash) {
+					if (resourceMap.get("inIterateVComp") == null) {
+
+						if (execStat) {
+							runStat.updateStatOnConnection("out1" + iterateId, 0, 0);
+						}
+
+						if (enableLogStash) {
+							runStat.logStatOnConnection("out1" + iterateId, 0, 0);
+						}
+
+					}
+				}
+
+				int tos_count_tLogRow_2 = 0;
+
+				if (log.isDebugEnabled())
+					log.debug("tLogRow_2 - " + ("Start to work."));
+				if (log.isDebugEnabled()) {
+					class BytesLimit65535_tLogRow_2 {
+						public void limitLog4jByte() throws Exception {
+							StringBuilder log4jParamters_tLogRow_2 = new StringBuilder();
+							log4jParamters_tLogRow_2.append("Parameters:");
+							log4jParamters_tLogRow_2.append("BASIC_MODE" + " = " + "true");
+							log4jParamters_tLogRow_2.append(" | ");
+							log4jParamters_tLogRow_2.append("TABLE_PRINT" + " = " + "false");
+							log4jParamters_tLogRow_2.append(" | ");
+							log4jParamters_tLogRow_2.append("VERTICAL" + " = " + "false");
+							log4jParamters_tLogRow_2.append(" | ");
+							log4jParamters_tLogRow_2.append("FIELDSEPARATOR" + " = " + "\"|\"");
+							log4jParamters_tLogRow_2.append(" | ");
+							log4jParamters_tLogRow_2.append("PRINT_HEADER" + " = " + "false");
+							log4jParamters_tLogRow_2.append(" | ");
+							log4jParamters_tLogRow_2.append("PRINT_UNIQUE_NAME" + " = " + "false");
+							log4jParamters_tLogRow_2.append(" | ");
+							log4jParamters_tLogRow_2.append("PRINT_COLNAMES" + " = " + "false");
+							log4jParamters_tLogRow_2.append(" | ");
+							log4jParamters_tLogRow_2.append("USE_FIXED_LENGTH" + " = " + "false");
+							log4jParamters_tLogRow_2.append(" | ");
+							log4jParamters_tLogRow_2.append("PRINT_CONTENT_WITH_LOG4J" + " = " + "true");
+							log4jParamters_tLogRow_2.append(" | ");
+							if (log.isDebugEnabled())
+								log.debug("tLogRow_2 - " + (log4jParamters_tLogRow_2));
+						}
+					}
+					new BytesLimit65535_tLogRow_2().limitLog4jByte();
+				}
+				if (enableLogStash) {
+					talendJobLog.addComponentMessage("tLogRow_2", "tLogRow");
+					talendJobLogProcess(globalMap);
+				}
+
+				///////////////////////
+
+				final String OUTPUT_FIELD_SEPARATOR_tLogRow_2 = "|";
+				java.io.PrintStream consoleOut_tLogRow_2 = null;
+
+				StringBuilder strBuffer_tLogRow_2 = null;
+				int nb_line_tLogRow_2 = 0;
+///////////////////////    			
+
+				/**
+				 * [tLogRow_2 begin ] stop
+				 */
+
+				/**
+				 * [tMap_1 begin ] start
+				 */
+
+				ok_Hash.put("tMap_1", false);
+				start_Hash.put("tMap_1", System.currentTimeMillis());
+
+				currentComponent = "tMap_1";
+
+				if (execStat || enableLogStash) {
+					if (resourceMap.get("inIterateVComp") == null) {
+
+						if (execStat) {
+							runStat.updateStatOnConnection("row2" + iterateId, 0, 0);
+						}
+
+						if (enableLogStash) {
+							runStat.logStatOnConnection("row2" + iterateId, 0, 0);
+						}
+
+					}
+				}
+
+				int tos_count_tMap_1 = 0;
+
+				if (log.isDebugEnabled())
+					log.debug("tMap_1 - " + ("Start to work."));
+				if (log.isDebugEnabled()) {
+					class BytesLimit65535_tMap_1 {
+						public void limitLog4jByte() throws Exception {
+							StringBuilder log4jParamters_tMap_1 = new StringBuilder();
+							log4jParamters_tMap_1.append("Parameters:");
+							log4jParamters_tMap_1.append("LINK_STYLE" + " = " + "AUTO");
+							log4jParamters_tMap_1.append(" | ");
+							log4jParamters_tMap_1.append("TEMPORARY_DATA_DIRECTORY" + " = " + "");
+							log4jParamters_tMap_1.append(" | ");
+							log4jParamters_tMap_1.append("ROWS_BUFFER_SIZE" + " = " + "2000000");
+							log4jParamters_tMap_1.append(" | ");
+							log4jParamters_tMap_1.append("CHANGE_HASH_AND_EQUALS_FOR_BIGDECIMAL" + " = " + "true");
+							log4jParamters_tMap_1.append(" | ");
+							if (log.isDebugEnabled())
+								log.debug("tMap_1 - " + (log4jParamters_tMap_1));
+						}
+					}
+					new BytesLimit65535_tMap_1().limitLog4jByte();
+				}
+				if (enableLogStash) {
+					talendJobLog.addComponentMessage("tMap_1", "tMap");
+					talendJobLogProcess(globalMap);
+				}
+
+// ###############################
+// # Lookup's keys initialization
+				int count_row2_tMap_1 = 0;
+
+// ###############################        
+
+// ###############################
+// # Vars initialization
+				class Var__tMap_1__Struct {
+				}
+				Var__tMap_1__Struct Var__tMap_1 = new Var__tMap_1__Struct();
+// ###############################
+
+// ###############################
+// # Outputs initialization
+				int count_out1_tMap_1 = 0;
+
+				out1Struct out1_tmp = new out1Struct();
+// ###############################
+
+				/**
+				 * [tMap_1 begin ] stop
+				 */
+
+				/**
+				 * [tFileInputDelimited_1 begin ] start
+				 */
+
+				ok_Hash.put("tFileInputDelimited_1", false);
+				start_Hash.put("tFileInputDelimited_1", System.currentTimeMillis());
+
+				currentComponent = "tFileInputDelimited_1";
+
+				int tos_count_tFileInputDelimited_1 = 0;
+
+				if (log.isDebugEnabled())
+					log.debug("tFileInputDelimited_1 - " + ("Start to work."));
+				if (log.isDebugEnabled()) {
+					class BytesLimit65535_tFileInputDelimited_1 {
+						public void limitLog4jByte() throws Exception {
+							StringBuilder log4jParamters_tFileInputDelimited_1 = new StringBuilder();
+							log4jParamters_tFileInputDelimited_1.append("Parameters:");
+							log4jParamters_tFileInputDelimited_1.append("FILENAME" + " = " + "\"C:/Talend/Genre.csv\"");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("CSV_OPTION" + " = " + "false");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("ROWSEPARATOR" + " = " + "\"\\n\"");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("FIELDSEPARATOR" + " = " + "\";\"");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("HEADER" + " = " + "1");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("FOOTER" + " = " + "0");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("LIMIT" + " = " + "");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("REMOVE_EMPTY_ROW" + " = " + "false");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("UNCOMPRESS" + " = " + "false");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("DIE_ON_ERROR" + " = " + "false");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("ADVANCED_SEPARATOR" + " = " + "false");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("RANDOM" + " = " + "false");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("TRIMALL" + " = " + "false");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append(
+									"TRIMSELECT" + " = " + "[{TRIM=" + ("false") + ", SCHEMA_COLUMN=" + ("GenreId")
+											+ "}, {TRIM=" + ("false") + ", SCHEMA_COLUMN=" + ("Name") + "}]");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("CHECK_FIELDS_NUM" + " = " + "false");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("CHECK_DATE" + " = " + "false");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("ENCODING" + " = " + "\"UTF-8\"");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("SPLITRECORD" + " = " + "false");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							log4jParamters_tFileInputDelimited_1.append("ENABLE_DECODE" + " = " + "false");
+							log4jParamters_tFileInputDelimited_1.append(" | ");
+							if (log.isDebugEnabled())
+								log.debug("tFileInputDelimited_1 - " + (log4jParamters_tFileInputDelimited_1));
+						}
+					}
+					new BytesLimit65535_tFileInputDelimited_1().limitLog4jByte();
+				}
+				if (enableLogStash) {
+					talendJobLog.addComponentMessage("tFileInputDelimited_1", "tFileInputDelimited");
+					talendJobLogProcess(globalMap);
+				}
+
+				final routines.system.RowState rowstate_tFileInputDelimited_1 = new routines.system.RowState();
+
+				int nb_line_tFileInputDelimited_1 = 0;
+				org.talend.fileprocess.FileInputDelimited fid_tFileInputDelimited_1 = null;
+				int limit_tFileInputDelimited_1 = -1;
+				try {
+
+					Object filename_tFileInputDelimited_1 = "C:/Talend/Genre.csv";
+					if (filename_tFileInputDelimited_1 instanceof java.io.InputStream) {
+
+						int footer_value_tFileInputDelimited_1 = 0, random_value_tFileInputDelimited_1 = -1;
+						if (footer_value_tFileInputDelimited_1 > 0 || random_value_tFileInputDelimited_1 > 0) {
+							throw new java.lang.Exception(
+									"When the input source is a stream,footer and random shouldn't be bigger than 0.");
+						}
+
+					}
+					try {
+						fid_tFileInputDelimited_1 = new org.talend.fileprocess.FileInputDelimited("C:/Talend/Genre.csv",
+								"UTF-8", ";", "\n", false, 1, 0, limit_tFileInputDelimited_1, -1, false);
+					} catch (java.lang.Exception e) {
+
+						log.error("tFileInputDelimited_1 - " + e.getMessage());
+
+						System.err.println(e.getMessage());
+
+					}
+
+					log.info("tFileInputDelimited_1 - Retrieving records from the datasource.");
+
+					while (fid_tFileInputDelimited_1 != null && fid_tFileInputDelimited_1.nextRecord()) {
+						rowstate_tFileInputDelimited_1.reset();
+
+						row2 = null;
+
+						boolean whetherReject_tFileInputDelimited_1 = false;
+						row2 = new row2Struct();
+						try {
+
+							int columnIndexWithD_tFileInputDelimited_1 = 0;
+
+							String temp = "";
+
+							columnIndexWithD_tFileInputDelimited_1 = 0;
+
+							temp = fid_tFileInputDelimited_1.get(columnIndexWithD_tFileInputDelimited_1);
+							if (temp.length() > 0) {
+
+								try {
+
+									row2.GenreId = ParserUtils.parseTo_Integer(temp);
+
+								} catch (java.lang.Exception ex_tFileInputDelimited_1) {
+									rowstate_tFileInputDelimited_1.setException(new RuntimeException(String.format(
+											"Couldn't parse value for column '%s' in '%s', value is '%s'. Details: %s",
+											"GenreId", "row2", temp, ex_tFileInputDelimited_1),
+											ex_tFileInputDelimited_1));
+								}
+
+							} else {
+
+								row2.GenreId = null;
+
+							}
+
+							columnIndexWithD_tFileInputDelimited_1 = 1;
+
+							row2.Name = fid_tFileInputDelimited_1.get(columnIndexWithD_tFileInputDelimited_1);
+
+							if (rowstate_tFileInputDelimited_1.getException() != null) {
+								throw rowstate_tFileInputDelimited_1.getException();
+							}
+
+						} catch (java.lang.Exception e) {
+							whetherReject_tFileInputDelimited_1 = true;
+
+							log.error("tFileInputDelimited_1 - " + e.getMessage());
+
+							System.err.println(e.getMessage());
+							row2 = null;
+
+						}
+
+						log.debug("tFileInputDelimited_1 - Retrieving the record "
+								+ fid_tFileInputDelimited_1.getRowNumber() + ".");
+
+						/**
+						 * [tFileInputDelimited_1 begin ] stop
+						 */
+
+						/**
+						 * [tFileInputDelimited_1 main ] start
+						 */
+
+						currentComponent = "tFileInputDelimited_1";
+
+						tos_count_tFileInputDelimited_1++;
+
+						/**
+						 * [tFileInputDelimited_1 main ] stop
+						 */
+
+						/**
+						 * [tFileInputDelimited_1 process_data_begin ] start
+						 */
+
+						currentComponent = "tFileInputDelimited_1";
+
+						/**
+						 * [tFileInputDelimited_1 process_data_begin ] stop
+						 */
+// Start of branch "row2"
+						if (row2 != null) {
+
+							/**
+							 * [tMap_1 main ] start
+							 */
+
+							currentComponent = "tMap_1";
+
+							// row2
+							// row2
+
+							if (execStat) {
+								runStat.updateStatOnConnection("row2" + iterateId, 1, 1);
+							}
+
+							if (enableLogStash) {
+								runStat.logStatOnConnection("row2" + iterateId, 1, 1);
+							}
+
+							if (log.isTraceEnabled()) {
+								log.trace("row2 - " + (row2 == null ? "" : row2.toLogString()));
+							}
+
+							boolean hasCasePrimitiveKeyWithNull_tMap_1 = false;
+
+							// ###############################
+							// # Input tables (lookups)
+							boolean rejectedInnerJoin_tMap_1 = false;
+							boolean mainRowRejected_tMap_1 = false;
+
+							// ###############################
+							{ // start of Var scope
+
+								// ###############################
+								// # Vars tables
+
+								Var__tMap_1__Struct Var = Var__tMap_1;// ###############################
+								// ###############################
+								// # Output tables
+
+								out1 = null;
+
+// # Output table : 'out1'
+								count_out1_tMap_1++;
+
+								out1_tmp.GenreId = row2.GenreId;
+								out1_tmp.Name = row2.Name;
+								out1 = out1_tmp;
+								log.debug("tMap_1 - Outputting the record " + count_out1_tMap_1
+										+ " of the output table 'out1'.");
+
+// ###############################
+
+							} // end of Var scope
+
+							rejectedInnerJoin_tMap_1 = false;
+
+							tos_count_tMap_1++;
+
+							/**
+							 * [tMap_1 main ] stop
+							 */
+
+							/**
+							 * [tMap_1 process_data_begin ] start
+							 */
+
+							currentComponent = "tMap_1";
+
+							/**
+							 * [tMap_1 process_data_begin ] stop
+							 */
+// Start of branch "out1"
+							if (out1 != null) {
+
+								/**
+								 * [tLogRow_2 main ] start
+								 */
+
+								currentComponent = "tLogRow_2";
+
+								// out1
+								// out1
+
+								if (execStat) {
+									runStat.updateStatOnConnection("out1" + iterateId, 1, 1);
+								}
+
+								if (enableLogStash) {
+									runStat.logStatOnConnection("out1" + iterateId, 1, 1);
+								}
+
+								if (log.isTraceEnabled()) {
+									log.trace("out1 - " + (out1 == null ? "" : out1.toLogString()));
+								}
+
+///////////////////////		
+
+								strBuffer_tLogRow_2 = new StringBuilder();
+
+								if (out1.GenreId != null) { //
+
+									strBuffer_tLogRow_2.append(String.valueOf(out1.GenreId));
+
+								} //
+
+								strBuffer_tLogRow_2.append("|");
+
+								if (out1.Name != null) { //
+
+									strBuffer_tLogRow_2.append(String.valueOf(out1.Name));
+
+								} //
+
+								if (globalMap.get("tLogRow_CONSOLE") != null) {
+									consoleOut_tLogRow_2 = (java.io.PrintStream) globalMap.get("tLogRow_CONSOLE");
+								} else {
+									consoleOut_tLogRow_2 = new java.io.PrintStream(
+											new java.io.BufferedOutputStream(System.out));
+									globalMap.put("tLogRow_CONSOLE", consoleOut_tLogRow_2);
+								}
+								log.info("tLogRow_2 - Content of row " + (nb_line_tLogRow_2 + 1) + ": "
+										+ strBuffer_tLogRow_2.toString());
+								consoleOut_tLogRow_2.println(strBuffer_tLogRow_2.toString());
+								consoleOut_tLogRow_2.flush();
+								nb_line_tLogRow_2++;
+//////
+
+//////                    
+
+///////////////////////    			
+
+								tos_count_tLogRow_2++;
+
+								/**
+								 * [tLogRow_2 main ] stop
+								 */
+
+								/**
+								 * [tLogRow_2 process_data_begin ] start
+								 */
+
+								currentComponent = "tLogRow_2";
+
+								/**
+								 * [tLogRow_2 process_data_begin ] stop
+								 */
+
+								/**
+								 * [tLogRow_2 process_data_end ] start
+								 */
+
+								currentComponent = "tLogRow_2";
+
+								/**
+								 * [tLogRow_2 process_data_end ] stop
+								 */
+
+							} // End of branch "out1"
+
+							/**
+							 * [tMap_1 process_data_end ] start
+							 */
+
+							currentComponent = "tMap_1";
+
+							/**
+							 * [tMap_1 process_data_end ] stop
+							 */
+
+						} // End of branch "row2"
+
+						/**
+						 * [tFileInputDelimited_1 process_data_end ] start
+						 */
+
+						currentComponent = "tFileInputDelimited_1";
+
+						/**
+						 * [tFileInputDelimited_1 process_data_end ] stop
+						 */
+
+						/**
+						 * [tFileInputDelimited_1 end ] start
+						 */
+
+						currentComponent = "tFileInputDelimited_1";
+
+					}
+				} finally {
+					if (!((Object) ("C:/Talend/Genre.csv") instanceof java.io.InputStream)) {
+						if (fid_tFileInputDelimited_1 != null) {
+							fid_tFileInputDelimited_1.close();
+						}
+					}
+					if (fid_tFileInputDelimited_1 != null) {
+						globalMap.put("tFileInputDelimited_1_NB_LINE", fid_tFileInputDelimited_1.getRowNumber());
+
+						log.info("tFileInputDelimited_1 - Retrieved records count: "
+								+ fid_tFileInputDelimited_1.getRowNumber() + ".");
+
+					}
+				}
+
+				if (log.isDebugEnabled())
+					log.debug("tFileInputDelimited_1 - " + ("Done."));
+
+				ok_Hash.put("tFileInputDelimited_1", true);
+				end_Hash.put("tFileInputDelimited_1", System.currentTimeMillis());
+
+				/**
+				 * [tFileInputDelimited_1 end ] stop
+				 */
+
+				/**
+				 * [tMap_1 end ] start
+				 */
+
+				currentComponent = "tMap_1";
+
+// ###############################
+// # Lookup hashes releasing
+// ###############################      
+				log.debug("tMap_1 - Written records count in the table 'out1': " + count_out1_tMap_1 + ".");
+
+				if (execStat) {
+					if (resourceMap.get("inIterateVComp") == null || !((Boolean) resourceMap.get("inIterateVComp"))) {
+						runStat.updateStatOnConnection("row2" + iterateId, 2, 0);
+					}
+				}
+
+				if (enableLogStash) {
+					if (resourceMap.get("inIterateVComp") == null || !((Boolean) resourceMap.get("inIterateVComp"))) {
+
+						RunStat.StatBean talend_statebean = runStat.logStatOnConnection("row2" + iterateId, 2, 0);
+
+						talendJobLog.addConnectionMessage("tFileInputDelimited_1", "tFileInputDelimited", false,
+								"output", "row2", talend_statebean.getNbLine(), talend_statebean.getStartTime(),
+								talend_statebean.getEndTime());
+
+						talendJobLog.addConnectionMessage("tMap_1", "tMap", true, "input", "row2",
+								talend_statebean.getNbLine(), talend_statebean.getStartTime(),
+								talend_statebean.getEndTime());
+						talendJobLogProcess(globalMap);
+
+					}
+				}
+
+				if (log.isDebugEnabled())
+					log.debug("tMap_1 - " + ("Done."));
+
+				ok_Hash.put("tMap_1", true);
+				end_Hash.put("tMap_1", System.currentTimeMillis());
+
+				/**
+				 * [tMap_1 end ] stop
+				 */
+
+				/**
+				 * [tLogRow_2 end ] start
+				 */
+
+				currentComponent = "tLogRow_2";
+
+//////
+//////
+				globalMap.put("tLogRow_2_NB_LINE", nb_line_tLogRow_2);
+				if (log.isInfoEnabled())
+					log.info("tLogRow_2 - " + ("Printed row count: ") + (nb_line_tLogRow_2) + ("."));
+
+///////////////////////    			
+
+				if (execStat) {
+					if (resourceMap.get("inIterateVComp") == null || !((Boolean) resourceMap.get("inIterateVComp"))) {
+						runStat.updateStatOnConnection("out1" + iterateId, 2, 0);
+					}
+				}
+
+				if (enableLogStash) {
+					if (resourceMap.get("inIterateVComp") == null || !((Boolean) resourceMap.get("inIterateVComp"))) {
+
+						RunStat.StatBean talend_statebean = runStat.logStatOnConnection("out1" + iterateId, 2, 0);
+
+						talendJobLog.addConnectionMessage("tMap_1", "tMap", false, "output", "out1",
+								talend_statebean.getNbLine(), talend_statebean.getStartTime(),
+								talend_statebean.getEndTime());
+
+						talendJobLog.addConnectionMessage("tLogRow_2", "tLogRow", true, "input", "out1",
+								talend_statebean.getNbLine(), talend_statebean.getStartTime(),
+								talend_statebean.getEndTime());
+						talendJobLogProcess(globalMap);
+
+					}
+				}
+
+				if (log.isDebugEnabled())
+					log.debug("tLogRow_2 - " + ("Done."));
+
+				ok_Hash.put("tLogRow_2", true);
+				end_Hash.put("tLogRow_2", System.currentTimeMillis());
+
+				/**
+				 * [tLogRow_2 end ] stop
+				 */
+
+			} // end the resume
+
+		} catch (java.lang.Exception e) {
+
+			if (!(e instanceof TalendException)) {
+				log.fatal(currentComponent + " " + e.getMessage(), e);
+			}
+
+			TalendException te = new TalendException(e, currentComponent, globalMap);
+
+			throw te;
+		} catch (java.lang.Error error) {
+
+			runStat.stopThreadStat();
+
+			throw error;
+		} finally {
+
+			try {
+
+				/**
+				 * [tFileInputDelimited_1 finally ] start
+				 */
+
+				currentComponent = "tFileInputDelimited_1";
+
+				/**
+				 * [tFileInputDelimited_1 finally ] stop
+				 */
+
+				/**
+				 * [tMap_1 finally ] start
+				 */
+
+				currentComponent = "tMap_1";
+
+				/**
+				 * [tMap_1 finally ] stop
+				 */
+
+				/**
+				 * [tLogRow_2 finally ] start
+				 */
+
+				currentComponent = "tLogRow_2";
+
+				/**
+				 * [tLogRow_2 finally ] stop
+				 */
+
+			} catch (java.lang.Exception e) {
+				// ignore
+			} catch (java.lang.Error error) {
+				// ignore
+			}
+			resourceMap = null;
+		}
+
+		globalMap.put("tFileInputDelimited_1_SUBPROCESS_STATE", 1);
 	}
 
 	public void talendJobLogProcess(final java.util.Map<String, Object> globalMap) throws TalendException {
@@ -1343,6 +2455,6 @@ public class prueba_1 implements TalendJob {
 	ResumeUtil resumeUtil = null;
 }
 /************************************************************************************************
- * 44139 characters generated by Talend Cloud Big Data on the 3 de diciembre de
- * 2019 9:45:53 CET
+ * 79948 characters generated by Talend Cloud Big Data on the 3 de diciembre de
+ * 2019 10:01:16 CET
  ************************************************************************************************/
