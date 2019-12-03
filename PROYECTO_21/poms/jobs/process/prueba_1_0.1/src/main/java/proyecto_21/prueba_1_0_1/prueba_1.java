@@ -300,6 +300,16 @@ public class prueba_1 implements TalendJob {
 		tFileInputDelimited_1_onSubJobError(exception, errorComponent, globalMap);
 	}
 
+	public void tLogRow_3_error(Exception exception, String errorComponent,
+			final java.util.Map<String, Object> globalMap) throws TalendException {
+
+		end_Hash.put(errorComponent, System.currentTimeMillis());
+
+		status = "failure";
+
+		tFileInputDelimited_1_onSubJobError(exception, errorComponent, globalMap);
+	}
+
 	public void talendJobLog_error(Exception exception, String errorComponent,
 			final java.util.Map<String, Object> globalMap) throws TalendException {
 
@@ -987,6 +997,178 @@ public class prueba_1 implements TalendJob {
 
 	}
 
+	public static class out2Struct implements routines.system.IPersistableRow<out2Struct> {
+		final static byte[] commonByteArrayLock_PROYECTO_21_prueba_1 = new byte[0];
+		static byte[] commonByteArray_PROYECTO_21_prueba_1 = new byte[0];
+
+		public Integer GenreId;
+
+		public Integer getGenreId() {
+			return this.GenreId;
+		}
+
+		public String Name;
+
+		public String getName() {
+			return this.Name;
+		}
+
+		private Integer readInteger(ObjectInputStream dis) throws IOException {
+			Integer intReturn;
+			int length = 0;
+			length = dis.readByte();
+			if (length == -1) {
+				intReturn = null;
+			} else {
+				intReturn = dis.readInt();
+			}
+			return intReturn;
+		}
+
+		private void writeInteger(Integer intNum, ObjectOutputStream dos) throws IOException {
+			if (intNum == null) {
+				dos.writeByte(-1);
+			} else {
+				dos.writeByte(0);
+				dos.writeInt(intNum);
+			}
+		}
+
+		private String readString(ObjectInputStream dis) throws IOException {
+			String strReturn = null;
+			int length = 0;
+			length = dis.readInt();
+			if (length == -1) {
+				strReturn = null;
+			} else {
+				if (length > commonByteArray_PROYECTO_21_prueba_1.length) {
+					if (length < 1024 && commonByteArray_PROYECTO_21_prueba_1.length == 0) {
+						commonByteArray_PROYECTO_21_prueba_1 = new byte[1024];
+					} else {
+						commonByteArray_PROYECTO_21_prueba_1 = new byte[2 * length];
+					}
+				}
+				dis.readFully(commonByteArray_PROYECTO_21_prueba_1, 0, length);
+				strReturn = new String(commonByteArray_PROYECTO_21_prueba_1, 0, length, utf8Charset);
+			}
+			return strReturn;
+		}
+
+		private void writeString(String str, ObjectOutputStream dos) throws IOException {
+			if (str == null) {
+				dos.writeInt(-1);
+			} else {
+				byte[] byteArray = str.getBytes(utf8Charset);
+				dos.writeInt(byteArray.length);
+				dos.write(byteArray);
+			}
+		}
+
+		public void readData(ObjectInputStream dis) {
+
+			synchronized (commonByteArrayLock_PROYECTO_21_prueba_1) {
+
+				try {
+
+					int length = 0;
+
+					this.GenreId = readInteger(dis);
+
+					this.Name = readString(dis);
+
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+
+				}
+
+			}
+
+		}
+
+		public void writeData(ObjectOutputStream dos) {
+			try {
+
+				// Integer
+
+				writeInteger(this.GenreId, dos);
+
+				// String
+
+				writeString(this.Name, dos);
+
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+
+		}
+
+		public String toString() {
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(super.toString());
+			sb.append("[");
+			sb.append("GenreId=" + String.valueOf(GenreId));
+			sb.append(",Name=" + Name);
+			sb.append("]");
+
+			return sb.toString();
+		}
+
+		public String toLogString() {
+			StringBuilder sb = new StringBuilder();
+
+			if (GenreId == null) {
+				sb.append("<null>");
+			} else {
+				sb.append(GenreId);
+			}
+
+			sb.append("|");
+
+			if (Name == null) {
+				sb.append("<null>");
+			} else {
+				sb.append(Name);
+			}
+
+			sb.append("|");
+
+			return sb.toString();
+		}
+
+		/**
+		 * Compare keys
+		 */
+		public int compareTo(out2Struct other) {
+
+			int returnValue = -1;
+
+			return returnValue;
+		}
+
+		private int checkNullsAndCompare(Object object1, Object object2) {
+			int returnValue = 0;
+			if (object1 instanceof Comparable && object2 instanceof Comparable) {
+				returnValue = ((Comparable) object1).compareTo(object2);
+			} else if (object1 != null && object2 != null) {
+				returnValue = compareStrings(object1.toString(), object2.toString());
+			} else if (object1 == null && object2 != null) {
+				returnValue = 1;
+			} else if (object1 != null && object2 == null) {
+				returnValue = -1;
+			} else {
+				returnValue = 0;
+			}
+
+			return returnValue;
+		}
+
+		private int compareStrings(String string1, String string2) {
+			return string1.compareTo(string2);
+		}
+
+	}
+
 	public static class row2Struct implements routines.system.IPersistableRow<row2Struct> {
 		final static byte[] commonByteArrayLock_PROYECTO_21_prueba_1 = new byte[0];
 		static byte[] commonByteArray_PROYECTO_21_prueba_1 = new byte[0];
@@ -1181,6 +1363,7 @@ public class prueba_1 implements TalendJob {
 
 				row2Struct row2 = new row2Struct();
 				out1Struct out1 = new out1Struct();
+				out2Struct out2 = new out2Struct();
 
 				/**
 				 * [tLogRow_2 begin ] start
@@ -1257,6 +1440,80 @@ public class prueba_1 implements TalendJob {
 				 */
 
 				/**
+				 * [tLogRow_3 begin ] start
+				 */
+
+				ok_Hash.put("tLogRow_3", false);
+				start_Hash.put("tLogRow_3", System.currentTimeMillis());
+
+				currentComponent = "tLogRow_3";
+
+				if (execStat || enableLogStash) {
+					if (resourceMap.get("inIterateVComp") == null) {
+
+						if (execStat) {
+							runStat.updateStatOnConnection("out2" + iterateId, 0, 0);
+						}
+
+						if (enableLogStash) {
+							runStat.logStatOnConnection("out2" + iterateId, 0, 0);
+						}
+
+					}
+				}
+
+				int tos_count_tLogRow_3 = 0;
+
+				if (log.isDebugEnabled())
+					log.debug("tLogRow_3 - " + ("Start to work."));
+				if (log.isDebugEnabled()) {
+					class BytesLimit65535_tLogRow_3 {
+						public void limitLog4jByte() throws Exception {
+							StringBuilder log4jParamters_tLogRow_3 = new StringBuilder();
+							log4jParamters_tLogRow_3.append("Parameters:");
+							log4jParamters_tLogRow_3.append("BASIC_MODE" + " = " + "true");
+							log4jParamters_tLogRow_3.append(" | ");
+							log4jParamters_tLogRow_3.append("TABLE_PRINT" + " = " + "false");
+							log4jParamters_tLogRow_3.append(" | ");
+							log4jParamters_tLogRow_3.append("VERTICAL" + " = " + "false");
+							log4jParamters_tLogRow_3.append(" | ");
+							log4jParamters_tLogRow_3.append("FIELDSEPARATOR" + " = " + "\"|\"");
+							log4jParamters_tLogRow_3.append(" | ");
+							log4jParamters_tLogRow_3.append("PRINT_HEADER" + " = " + "false");
+							log4jParamters_tLogRow_3.append(" | ");
+							log4jParamters_tLogRow_3.append("PRINT_UNIQUE_NAME" + " = " + "false");
+							log4jParamters_tLogRow_3.append(" | ");
+							log4jParamters_tLogRow_3.append("PRINT_COLNAMES" + " = " + "false");
+							log4jParamters_tLogRow_3.append(" | ");
+							log4jParamters_tLogRow_3.append("USE_FIXED_LENGTH" + " = " + "false");
+							log4jParamters_tLogRow_3.append(" | ");
+							log4jParamters_tLogRow_3.append("PRINT_CONTENT_WITH_LOG4J" + " = " + "true");
+							log4jParamters_tLogRow_3.append(" | ");
+							if (log.isDebugEnabled())
+								log.debug("tLogRow_3 - " + (log4jParamters_tLogRow_3));
+						}
+					}
+					new BytesLimit65535_tLogRow_3().limitLog4jByte();
+				}
+				if (enableLogStash) {
+					talendJobLog.addComponentMessage("tLogRow_3", "tLogRow");
+					talendJobLogProcess(globalMap);
+				}
+
+				///////////////////////
+
+				final String OUTPUT_FIELD_SEPARATOR_tLogRow_3 = "|";
+				java.io.PrintStream consoleOut_tLogRow_3 = null;
+
+				StringBuilder strBuffer_tLogRow_3 = null;
+				int nb_line_tLogRow_3 = 0;
+///////////////////////    			
+
+				/**
+				 * [tLogRow_3 begin ] stop
+				 */
+
+				/**
 				 * [tMap_1 begin ] start
 				 */
 
@@ -1325,6 +1582,9 @@ public class prueba_1 implements TalendJob {
 				int count_out1_tMap_1 = 0;
 
 				out1Struct out1_tmp = new out1Struct();
+				int count_out2_tMap_1 = 0;
+
+				out2Struct out2_tmp = new out2Struct();
 // ###############################
 
 				/**
@@ -1553,6 +1813,7 @@ public class prueba_1 implements TalendJob {
 								// # Output tables
 
 								out1 = null;
+								out2 = null;
 
 // # Output table : 'out1'
 								count_out1_tMap_1++;
@@ -1562,6 +1823,15 @@ public class prueba_1 implements TalendJob {
 								out1 = out1_tmp;
 								log.debug("tMap_1 - Outputting the record " + count_out1_tMap_1
 										+ " of the output table 'out1'.");
+
+// # Output table : 'out2'
+								count_out2_tMap_1++;
+
+								out2_tmp.GenreId = row2.GenreId;
+								out2_tmp.Name = row2.Name;
+								out2 = out2_tmp;
+								log.debug("tMap_1 - Outputting the record " + count_out2_tMap_1
+										+ " of the output table 'out2'.");
 
 // ###############################
 
@@ -1672,6 +1942,94 @@ public class prueba_1 implements TalendJob {
 
 							} // End of branch "out1"
 
+// Start of branch "out2"
+							if (out2 != null) {
+
+								/**
+								 * [tLogRow_3 main ] start
+								 */
+
+								currentComponent = "tLogRow_3";
+
+								// out2
+								// out2
+
+								if (execStat) {
+									runStat.updateStatOnConnection("out2" + iterateId, 1, 1);
+								}
+
+								if (enableLogStash) {
+									runStat.logStatOnConnection("out2" + iterateId, 1, 1);
+								}
+
+								if (log.isTraceEnabled()) {
+									log.trace("out2 - " + (out2 == null ? "" : out2.toLogString()));
+								}
+
+///////////////////////		
+
+								strBuffer_tLogRow_3 = new StringBuilder();
+
+								if (out2.GenreId != null) { //
+
+									strBuffer_tLogRow_3.append(String.valueOf(out2.GenreId));
+
+								} //
+
+								strBuffer_tLogRow_3.append("|");
+
+								if (out2.Name != null) { //
+
+									strBuffer_tLogRow_3.append(String.valueOf(out2.Name));
+
+								} //
+
+								if (globalMap.get("tLogRow_CONSOLE") != null) {
+									consoleOut_tLogRow_3 = (java.io.PrintStream) globalMap.get("tLogRow_CONSOLE");
+								} else {
+									consoleOut_tLogRow_3 = new java.io.PrintStream(
+											new java.io.BufferedOutputStream(System.out));
+									globalMap.put("tLogRow_CONSOLE", consoleOut_tLogRow_3);
+								}
+								log.info("tLogRow_3 - Content of row " + (nb_line_tLogRow_3 + 1) + ": "
+										+ strBuffer_tLogRow_3.toString());
+								consoleOut_tLogRow_3.println(strBuffer_tLogRow_3.toString());
+								consoleOut_tLogRow_3.flush();
+								nb_line_tLogRow_3++;
+//////
+
+//////                    
+
+///////////////////////    			
+
+								tos_count_tLogRow_3++;
+
+								/**
+								 * [tLogRow_3 main ] stop
+								 */
+
+								/**
+								 * [tLogRow_3 process_data_begin ] start
+								 */
+
+								currentComponent = "tLogRow_3";
+
+								/**
+								 * [tLogRow_3 process_data_begin ] stop
+								 */
+
+								/**
+								 * [tLogRow_3 process_data_end ] start
+								 */
+
+								currentComponent = "tLogRow_3";
+
+								/**
+								 * [tLogRow_3 process_data_end ] stop
+								 */
+
+							} // End of branch "out2"
+
 							/**
 							 * [tMap_1 process_data_end ] start
 							 */
@@ -1736,6 +2094,7 @@ public class prueba_1 implements TalendJob {
 // # Lookup hashes releasing
 // ###############################      
 				log.debug("tMap_1 - Written records count in the table 'out1': " + count_out1_tMap_1 + ".");
+				log.debug("tMap_1 - Written records count in the table 'out2': " + count_out2_tMap_1 + ".");
 
 				if (execStat) {
 					if (resourceMap.get("inIterateVComp") == null || !((Boolean) resourceMap.get("inIterateVComp"))) {
@@ -1817,6 +2176,53 @@ public class prueba_1 implements TalendJob {
 				 * [tLogRow_2 end ] stop
 				 */
 
+				/**
+				 * [tLogRow_3 end ] start
+				 */
+
+				currentComponent = "tLogRow_3";
+
+//////
+//////
+				globalMap.put("tLogRow_3_NB_LINE", nb_line_tLogRow_3);
+				if (log.isInfoEnabled())
+					log.info("tLogRow_3 - " + ("Printed row count: ") + (nb_line_tLogRow_3) + ("."));
+
+///////////////////////    			
+
+				if (execStat) {
+					if (resourceMap.get("inIterateVComp") == null || !((Boolean) resourceMap.get("inIterateVComp"))) {
+						runStat.updateStatOnConnection("out2" + iterateId, 2, 0);
+					}
+				}
+
+				if (enableLogStash) {
+					if (resourceMap.get("inIterateVComp") == null || !((Boolean) resourceMap.get("inIterateVComp"))) {
+
+						RunStat.StatBean talend_statebean = runStat.logStatOnConnection("out2" + iterateId, 2, 0);
+
+						talendJobLog.addConnectionMessage("tMap_1", "tMap", false, "output", "out2",
+								talend_statebean.getNbLine(), talend_statebean.getStartTime(),
+								talend_statebean.getEndTime());
+
+						talendJobLog.addConnectionMessage("tLogRow_3", "tLogRow", true, "input", "out2",
+								talend_statebean.getNbLine(), talend_statebean.getStartTime(),
+								talend_statebean.getEndTime());
+						talendJobLogProcess(globalMap);
+
+					}
+				}
+
+				if (log.isDebugEnabled())
+					log.debug("tLogRow_3 - " + ("Done."));
+
+				ok_Hash.put("tLogRow_3", true);
+				end_Hash.put("tLogRow_3", System.currentTimeMillis());
+
+				/**
+				 * [tLogRow_3 end ] stop
+				 */
+
 			} // end the resume
 
 		} catch (java.lang.Exception e) {
@@ -1865,6 +2271,16 @@ public class prueba_1 implements TalendJob {
 
 				/**
 				 * [tLogRow_2 finally ] stop
+				 */
+
+				/**
+				 * [tLogRow_3 finally ] start
+				 */
+
+				currentComponent = "tLogRow_3";
+
+				/**
+				 * [tLogRow_3 finally ] stop
 				 */
 
 			} catch (java.lang.Exception e) {
@@ -2455,6 +2871,6 @@ public class prueba_1 implements TalendJob {
 	ResumeUtil resumeUtil = null;
 }
 /************************************************************************************************
- * 79948 characters generated by Talend Cloud Big Data on the 3 de diciembre de
- * 2019 10:01:16 CET
+ * 92550 characters generated by Talend Cloud Big Data on the 3 de diciembre de
+ * 2019 10:09:14 CET
  ************************************************************************************************/
